@@ -1,0 +1,15 @@
+{
+  "_note": "Controlled reference dataset. Static, hand-curated, offline. Extend this list per deployment.",
+  "entities": [
+    {"name": "PayPal", "aliases": ["paypal"], "official_domains": ["paypal.com"]},
+    {"name": "Microsoft", "aliases": ["microsoft", "outlook", "office 365", "office365"], "official_domains": ["microsoft.com", "office.com", "outlook.com", "live.com", "microsoftonline.com"]},
+    {"name": "Google", "aliases": ["google", "gmail"], "official_domains": ["google.com", "gmail.com", "accounts.google.com"]},
+    {"name": "Amazon", "aliases": ["amazon"], "official_domains": ["amazon.com", "amazon.in"]},
+    {"name": "Netflix", "aliases": ["netflix"], "official_domains": ["netflix.com"]},
+    {"name": "State Bank of India", "aliases": ["sbi", "state bank of india", "onlinesbi"], "official_domains": ["sbi.co.in", "onlinesbi.sbi", "sbi.bank.in"]},
+    {"name": "HDFC Bank", "aliases": ["hdfc", "hdfc bank"], "official_domains": ["hdfcbank.com"]},
+    {"name": "ICICI Bank", "aliases": ["icici", "icici bank"], "official_domains": ["icicibank.com"]},
+    {"name": "Income Tax Department India", "aliases": ["income tax", "incometax"], "official_domains": ["incometax.gov.in", "incometaxindia.gov.in"]},
+    {"name": "Instagram", "aliases": ["instagram"], "official_domains": ["instagram.com"]}
+  ]
+}
