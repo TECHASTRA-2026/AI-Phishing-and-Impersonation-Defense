@@ -17,3 +17,8 @@ To test errors: click ANALYZE with both fields empty; enter `not-a-url` in the U
 ### Important disclaimer
 
 This is a **UI/UX demonstration, not a working live phishing protection service**. Local heuristics illustrate possible explanations but cannot establish whether a message or URL is genuine. It does not fetch, click, visit, or transmit submitted messages or URLs. A low score is not proof of safety. No content is stored in the activity dashboard; only ephemeral category and score summaries exist in browser memory.
+
+### If Need
+
+Changes can be done further,still it is demo.
+
