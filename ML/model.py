@@ -16,8 +16,14 @@ from sklearn.metrics import (
     classification_report
 )
 
-# 1. Load dataset
-df = pd.read_csv("techaastra_message_dataset.csv")
+BASE_DIR = Path(__file__).resolve().parent
+DATASET_PATH = BASE_DIR / "techaastra_message_dataset.csv"
+
+# 1. Load dataset (handles both true CSV and Excel format with .csv extension)
+try:
+    df = pd.read_csv(DATASET_PATH)
+except Exception:
+    df = pd.read_excel(DATASET_PATH)
 
 # 2. Clean dataset
 df = df.dropna(subset=["text", "label"])
@@ -108,12 +114,12 @@ final_model = Pipeline([
 final_model.fit(X, y)
 
 # 8. Save model
-output_dir = Path("model_artifacts")
-output_dir.mkdir(exist_ok=True)
+output_dir = BASE_DIR / "model_artifacts"
+output_dir.mkdir(parents=True, exist_ok=True)
 
 joblib.dump(
     final_model,
     output_dir / "techaastra_phishing_model.joblib"
 )
 
-print("\nModel saved successfully!")
+print(f"\nModel saved successfully to {output_dir / 'techaastra_phishing_model.joblib'}!")
