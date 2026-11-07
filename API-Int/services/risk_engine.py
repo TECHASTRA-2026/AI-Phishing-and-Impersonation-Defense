@@ -8,6 +8,13 @@ def _map_indicator_to_item(ind: Dict[str, Any]) -> Dict[str, Any]:
     why = ind.get("why", "")
 
     mapping = {
+        "SCAM-01": {
+            "key": "scam_threat",
+            "title": "Explicit scam or threat language",
+            "summary": "Direct threat, scam declaration, or extortion confession detected.",
+            "severity": "high",
+            "how": "Matched explicit scam confession, blackmail, extortion, or threat patterns."
+        },
         "URG-01": {
             "key": "urgency",
             "title": "Pressure to act quickly",

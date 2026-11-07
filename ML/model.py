@@ -26,6 +26,42 @@ except Exception:
     df = pd.read_excel(DATASET_PATH)
 
 # 2. Clean dataset
+
+# Augment dataset with explicit scam, extortion, and cyber-threat patterns
+SCAM_AUGMENTATION = [
+    # Explicit Scam and Threats
+    ("I will scam you", "phishing_or_scam", "scam", "synthetic"),
+    ("i will scam you", "phishing_or_scam", "scam", "synthetic"),
+    ("Iwill scam you and take your money", "phishing_or_scam", "scam", "synthetic"),
+    ("I am a scammer and I will scam your account", "phishing_or_scam", "scam", "synthetic"),
+    ("You have been scammed. Pay a recovery fee to get your money back", "phishing_or_scam", "scam", "synthetic"),
+    ("This is a scam: send 500 dollars or your details will be published", "phishing_or_scam", "scam", "synthetic"),
+    ("I have hacked your computer and recorded your webcam, pay ransom now", "phishing_or_scam", "extortion", "synthetic"),
+    ("Blackmail notice: pay 500 in Bitcoin or your personal data will be leaked", "phishing_or_scam", "extortion", "synthetic"),
+    ("You are being scammed. Transfer all remaining funds to this safe account", "phishing_or_scam", "scam", "synthetic"),
+    ("Job opportunity: pay 500 deposit fee to start working from home scam", "phishing_or_scam", "scam", "synthetic"),
+    ("Crypto investment scam: guaranteed 10x returns in 24 hours send Ethereum", "phishing_or_scam", "scam", "synthetic"),
+    ("Immediate payment required: wire funds or face legal arrest scam", "phishing_or_scam", "scam", "synthetic"),
+    ("Scammer demand: send Amazon gift card codes right now to cancel fine", "phishing_or_scam", "scam", "synthetic"),
+    ("Extortion warning: send crypto to my wallet within 48 hours or face public release", "phishing_or_scam", "extortion", "synthetic"),
+    ("I hacked into your system, send funds or your files will be deleted", "phishing_or_scam", "extortion", "synthetic"),
+    ("Your phone has been compromised, pay ransom to decrypt your files", "phishing_or_scam", "extortion", "synthetic"),
+    ("Scam alert: claim your free 1000 prize by submitting your banking password", "phishing_or_scam", "scam", "synthetic"),
+    ("Fake refund: provide your UPI PIN to claim 5000 cashback", "phishing_or_scam", "scam", "synthetic"),
+    # Legitimate counter-balancing samples
+    ("We discussed common scam tactics in our cybersecurity class today", "legitimate", "academic", "synthetic"),
+    ("Please report any suspicious scam emails to the university IT desk", "legitimate", "academic", "synthetic"),
+    ("The lecture on fraud detection algorithms is scheduled for Monday", "legitimate", "academic", "synthetic"),
+    ("Can you share the notes on how phishing filters work?", "legitimate", "academic", "synthetic"),
+    ("Our team project presentation on scam prevention is due next Friday", "legitimate", "academic", "synthetic"),
+    ("I received a weird message, could you check if it is safe?", "legitimate", "chat", "synthetic"),
+    ("Let's meet at the library to finish our machine learning assignment", "legitimate", "chat", "synthetic"),
+    ("Don't forget to submit your lab report before midnight", "legitimate", "academic", "synthetic"),
+]
+
+aug_df = pd.DataFrame(SCAM_AUGMENTATION, columns=["text", "label", "category", "source"])
+df = pd.concat([df, aug_df], ignore_index=True)
+
 df = df.dropna(subset=["text", "label"])
 df = df.drop_duplicates(subset=["text"])
 

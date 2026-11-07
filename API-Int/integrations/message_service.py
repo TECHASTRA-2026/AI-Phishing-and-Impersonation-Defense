@@ -95,6 +95,13 @@ def analyze_message(
     sec_score = sec_result.get("score", 0)
     composite_score = min(100, round((0.40 * ml_score) + (0.60 * sec_score)))
 
+    # Security Floor: High-confidence heuristic signals (>= 50) establish a minimum risk score
+    # so out-of-vocabulary words in an ML model do not dilute verified threat indicators.
+    if sec_score >= 50:
+        composite_score = max(composite_score, sec_score)
+    elif sec_score >= 25 and ml_phishing_prob >= 0.50:
+        composite_score = max(composite_score, 55)
+
     classification = "Phishing / Scam" if composite_score >= 50 or ml_result.get("is_phishing") else "Suspicious" if composite_score >= 25 else "Legitimate"
 
     return {
