@@ -20,7 +20,7 @@ INDICATORS = [
      r"\b(account (will be |has been )?(suspended|blocked|closed|locked|deactivated)|legal action|penalty|arrest|permanently (deleted|disabled))\b", 15),
     ("INFO-01", "Sensitive-information request",
      "Legitimate organisations do not ask for secrets over email/chat.",
-     r"\b(password|otp|one[- ]time (password|code)|\bpin\b|cvv|card number|aadhaar|pan (number|card)|login (details|credentials)|verify your (account|identity|details)|confirm your (account|identity|details))\b", 25),
+     r"\b(password|otp|one[- ]time (password|code)|\bpin\b|cvv|card number|Scam|scam|aadhaar|pan (number|card)|login (details|credentials)|verify your (account|identity|details)|confirm your (account|identity|details))\b", 25),
     ("PAY-01", "Unusual payment request",
      "Gift cards, crypto, wire/UPI 'fees' are hard to reverse and favoured by scammers.",
      r"\b(gift ?cards?|wire transfer|crypto(currency)?|bitcoin|western union|processing fee|refund fee|send money|pay (a |the )?fee|upi (id|request))\b", 20),

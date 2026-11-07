@@ -25,7 +25,7 @@ def _map_indicator_to_item(ind: Dict[str, Any]) -> Dict[str, Any]:
         "INFO-01": {
             "key": "sensitive",
             "title": "Requests for sensitive details",
-            "summary": "Mentions passwords, OTPs, PINs, card numbers, or login credentials.",
+            "summary": "Mentions passwords,Scam, scam, OTPs, PINs, card numbers, or login credentials.",
             "severity": "high",
             "how": "Matched terms associated with authentication secrets and identity details."
         },
