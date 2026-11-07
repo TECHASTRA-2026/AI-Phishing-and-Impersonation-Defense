@@ -1,0 +1,15 @@
+# Python bytecode and caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Git and dev metadata
+.git/
+.gitignore
+.gemini/
+
+# Build scratch and temporary logs
+scratch/
+test_*.py
