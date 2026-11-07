@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#060e17">
+    <link rel="icon" type="image/png" href="SENTINEL_logo.png">
+  <link rel="shortcut icon" type="image/png" href="SENTINEL_logo.png">
+  <link rel="apple-touch-icon" href="SENTINEL_logo.png">
   <meta name="description" content="SENTINEL — 3D Cyber Defense Platform with Dedicated Analyzers for Message NLP, URL Threat Detection, and Brand Impersonation Verification.">
   <title>SENTINEL — 3D AI Phishing &amp; Impersonation Defense</title>
   <style>
@@ -146,18 +149,38 @@
       gap: 12px;
       min-width: 0;
     }
+    .brandmark-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      padding: 0;
+      filter: drop-shadow(0 2px 8px rgba(0, 240, 255, 0.45));
+      transition: filter var(--dur), transform var(--dur);
+    }
+    .brand:hover .brandmark-img {
+      filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.75));
+      transform: scale(1.05);
+    }
+    .eyebrow-logo {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      vertical-align: -5px;
+      margin-right: 6px;
+      filter: drop-shadow(0 0 6px var(--accent));
+    }
     .brandmark {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      color: var(--accent);
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(112, 180, 255, 0.1));
-      border: 1px solid var(--accent);
-      border-radius: 12px;
-      box-shadow: 0 0 16px var(--accent-glow);
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      box-shadow: none;
       flex: none;
-      transition: all var(--dur);
+      transition: transform var(--dur);
     }
     .brand-text-wrap {
       display: flex;
@@ -1182,9 +1205,11 @@
         flex: 1 1 auto;
       }
       .brandmark {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
+        width: 44px;
+        height: 44px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
       }
       .brandmark .icon {
         width: 20px;
@@ -1761,12 +1786,11 @@
       flex: 1;
     }
     .privacy-badge-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: rgba(0, 240, 255, 0.12);
-      border: 1px solid rgba(0, 240, 255, 0.35);
-      color: var(--accent);
+      width: 52px;
+      height: 52px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1847,15 +1871,14 @@
       color: var(--ink);
     }
     .footer-brandmark {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(112, 180, 255, 0.15));
-      border: 1px solid var(--accent);
+      width: 48px;
+      height: 48px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--accent);
     }
     .footer-brand-title {
       font-size: 16px;
@@ -2098,7 +2121,7 @@
 <header class="nav">
   <div class="container nav-wrap">
     <a class="brand" href="#home">
-      <span class="brandmark"><svg class="icon lg"><use href="#i-shield"/></svg></span>
+      <span class="brandmark"><img src="SENTINEL_logo.png" alt="SENTINEL Logo" class="brandmark-img"></span>
       <span class="brand-text-wrap">
         <span class="brand-title">SENTINEL</span>
         <span class="brand-sub">AI PHISHING &amp; IMPERSONATION DEFENSE</span>
@@ -2128,7 +2151,7 @@
   <section class="hero" id="home">
     <div class="container hero-grid">
       <div>
-        <div class="eyebrow"><svg class="icon sm"><use href="#i-shield"/></svg> Multi-Vector Cyber Defense</div>
+        <div class="eyebrow"><img src="SENTINEL_logo.png" alt="SENTINEL" class="eyebrow-logo"> Multi-Vector Cyber Defense</div>
         <h1>Dedicated Defense for <span>Messages, URLs &amp; Identity.</span></h1>
         <p class="hero-desc">
           Attackers use blended techniques. SENTINEL gives you specialized analyzers for NLP message classification, structural URL risk scoring, and verified brand impersonation detection.
@@ -2844,7 +2867,7 @@
       <div class="about-privacy-banner">
         <div class="privacy-banner-left">
           <div class="privacy-badge-icon">
-            <svg class="icon"><use href="#i-shield"/></svg>
+            <img src="SENTINEL_logo.png" alt="SENTINEL" style="width:48px; height:48px; object-fit:contain; filter:drop-shadow(0 2px 10px rgba(0,240,255,0.45));">
           </div>
           <div>
             <h4 class="privacy-banner-title">Client-First Privacy &amp; Ethical AI Guarantee</h4>
@@ -2879,7 +2902,7 @@
       <!-- COL 1: BRAND & MISSION -->
       <div class="footer-col-brand">
         <a class="footer-brand" href="#home">
-          <span class="footer-brandmark"><svg class="icon sm"><use href="#i-shield"/></svg></span>
+          <span class="footer-brandmark"><img src="SENTINEL_logo.png" alt="SENTINEL Logo" class="brandmark-img"></span>
           <span class="footer-brand-title">SENTINEL</span>
         </a>
         <p class="footer-desc">
@@ -2945,7 +2968,10 @@
 <div class="overlay" id="modalOverlay" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-head">
-      <h3 id="modalTitle">Signal Diagnostic Breakdown</h3>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img src="SENTINEL_logo.png" alt="SENTINEL" style="width:36px; height:36px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(0,240,255,0.45));">
+        <h3 id="modalTitle" style="margin:0;">Signal Diagnostic Breakdown</h3>
+      </div>
       <button type="button" class="icon-btn" id="modalCloseBtn" aria-label="Close modal">
         <svg class="icon sm"><use href="#i-x"/></svg>
       </button>

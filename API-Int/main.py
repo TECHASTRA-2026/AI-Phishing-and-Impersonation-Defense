@@ -61,3 +61,17 @@ def api_status():
         "status": "Running",
         "version": "1.0"
     }
+
+LOGO_FILE = ROOT_DIR / "SENTINEL_logo.png"
+UI_LOGO = ROOT_DIR / "ui-ux" / "SENTINEL_logo.png"
+
+
+@app.get("/SENTINEL_logo.png")
+@app.get("/favicon.ico")
+def serve_logo():
+    """Serves the official SENTINEL brand logo and browser favicon."""
+    if LOGO_FILE.exists():
+        return FileResponse(LOGO_FILE, media_type="image/png")
+    if UI_LOGO.exists():
+        return FileResponse(UI_LOGO, media_type="image/png")
+    return {"error": "Logo not found"}
