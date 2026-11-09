@@ -109,7 +109,9 @@ def _map_url_signal_to_item(signal: Dict[str, Any], url_data: Dict[str, Any]) ->
         "URL-SHORT": "URL shorteners conceal where the link really points, preventing a preview of the true destination.",
         "URL-HTTP": "Plain HTTP sends traffic unencrypted. Anyone on the local network can intercept the data.",
         "URL-SUB": "Attackers create deep subdomains (e.g. sbi.com.security.xyz) to hide the real domain on mobile screens.",
-        "URL-KW": "Keyword stuffing (login, verify, secure) is commonly used to create a false sense of security."
+        "URL-SUB-KW": "Attackers pad subdomains with security and authentication terms to create a deceptive appearance of legitimacy.",
+        "URL-KW": "Keyword stuffing (login, verify, secure) is commonly used to create a false sense of security.",
+        "URL-KW1": "Sensitive authentication or account verification keywords on an unverified domain indicate targeted credential harvesting."
     }
 
     why = why_map.get(code, "Unusual structural patterns in a URL are a common sign of deceptive intent.")

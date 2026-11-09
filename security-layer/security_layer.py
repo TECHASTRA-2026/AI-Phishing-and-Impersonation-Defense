@@ -50,10 +50,38 @@ ENTITIES = load_entities()
 
 # ----------------------------------------------------------------- Task 2: URL analyzer
 MULTI_TLD = {"co.in", "gov.in", "org.in", "ac.in", "net.in", "co.uk", "org.uk", "com.au", "co.jp", "bank.in"}
-SUSPICIOUS_TLDS = {"xyz", "top", "click", "icu", "tk", "ml", "ga", "cf", "gq", "work", "support", "zip", "mov", "rest", "buzz"}
+SUSPICIOUS_TLDS = {
+    "xyz", "top", "click", "icu", "tk", "ml", "ga", "cf", "gq", "work", "support",
+    "zip", "mov", "rest", "buzz", "cfd", "cam", "fit", "gdn", "loan", "sbs", "quest", "agency"
+}
 SHORTENERS = {"bit.ly", "tinyurl.com", "t.co", "goo.gl", "is.gd", "cutt.ly", "rb.gy", "ow.ly", "shorturl.at"}
-URL_KEYWORDS = {"login", "signin", "verify", "secure", "account", "update", "confirm", "banking", "wallet", "password", "support", "billing"}
-HOMOGLYPHS = str.maketrans({"0": "o", "1": "l", "3": "e", "5": "s", "$": "s", "@": "a"})
+URL_KEYWORDS = {
+    "login", "signin", "verify", "secure", "security", "account", "update", "confirm",
+    "banking", "wallet", "password", "support", "billing", "auth", "kyc", "portal",
+    "validate", "recover", "session", "otp", "payment", "invoice", "tax", "statement", "alert"
+}
+
+# Homoglyph translation mapping covering ASCII leetspeak, Cyrillic, and Greek confusable glyphs
+HOMOGLYPH_CHARS = {
+    "0": "o", "1": "l", "3": "e", "4": "a", "5": "s", "8": "b", "$": "s", "@": "a", "!": "i",
+    # Cyrillic lookalikes
+    "\u0430": "a", "\u0410": "a",  # а, А
+    "\u0435": "e", "\u0415": "e",  # е, Е
+    "\u043e": "o", "\u041e": "o",  # о, О
+    "\u0440": "p", "\u0420": "p",  # р, Р
+    "\u0441": "c", "\u0421": "c",  # с, С
+    "\u0443": "y", "\u0423": "y",  # у, У
+    "\u0445": "x", "\u0425": "x",  # х, Х
+    "\u0456": "i", "\u0406": "i",  # і, І
+    "\u0458": "j", "\u0408": "j",  # ј, Ј
+    "\u0455": "s", "\u0405": "s",  # ѕ, Ѕ
+    # Greek lookalikes
+    "\u03b1": "a", "\u0391": "a",  # α, Α
+    "\u03bf": "o", "\u039f": "o",  # ο, Ο
+    "\u03c1": "p", "\u03a1": "p",  # ρ, Ρ
+    "\u03bd": "v", "\u039d": "n",  # ν, Ν
+}
+HOMOGLYPHS = str.maketrans(HOMOGLYPH_CHARS)
 URL_RE = re.compile(r"(https?://[^\s<>\"')]+|www\.[^\s<>\"')]+)", re.I)
 
 def registered_domain(host):
@@ -82,14 +110,28 @@ def lookalike_of(domain):
     if is_official(domain):
         return None
     label = domain.split(".")[0]
-    norm = _normalise_label(label)
-    for e in ENTITIES:
-        for off in e["official_domains"]:
-            off_label = off.split(".")[0]
-            if len(off_label) < 4:
-                continue
-            if norm == off_label or (levenshtein(norm, off_label) <= 1 and len(off_label) >= 5):
-                return e["name"], off
+    
+    # Check both whole label and composite subparts (e.g. paypa1-security -> paypa1, security)
+    candidates = [label]
+    subparts = [p for p in re.split(r"[-_.]+", label) if len(p) >= 3]
+    if len(subparts) > 1:
+        candidates.extend(subparts)
+
+    for cand in candidates:
+        norm = _normalise_label(cand)
+        for e in ENTITIES:
+            # Check official domains for this entity
+            for off in e["official_domains"]:
+                off_label = off.split(".")[0]
+                # Direct match after homoglyph normalization (e.g. paypa1 -> paypal)
+                if norm == off_label:
+                    return e["name"], off
+                # Check known brand aliases if brand is mentioned in composite candidate
+                if len(cand) >= 3 and any(norm == a.replace(" ", "") for a in e.get("aliases", [])):
+                    return e["name"], off
+                # Fuzzy Levenshtein match for single-character typosquats
+                if len(off_label) >= 5 and levenshtein(norm, off_label) <= 1:
+                    return e["name"], off
     return None
 
 def extract_urls(text):
@@ -103,6 +145,7 @@ def analyze_url(url):
     sub_labels = host[: -len(reg)].strip(".").split(".") if host.endswith(reg) and host != reg else []
     sub_count = len([s for s in sub_labels if s])
     tokens = set(re.split(r"[^a-z0-9]+", (host + " " + unquote(p.path)).lower()))
+    norm_tokens = {_normalise_label(t) for t in tokens}
     signals = []
 
     def add(code, desc, w):
@@ -112,11 +155,14 @@ def analyze_url(url):
         add("URL-IP", "Host is a raw IP address instead of a domain name", 25)
     if "@" in p.netloc:
         add("URL-AT", "Contains '@' - text before it is ignored by browsers and hides the real host", 20)
-    if "xn--" in host:
-        add("URL-PUNY", "Punycode domain (possible lookalike characters)", 20)
+    has_non_ascii = any(ord(c) > 127 for c in host)
+    if "xn--" in host or has_non_ascii:
+        add("URL-PUNY", "Internationalized / Punycode character (possible homoglyph lookalike)", 25)
     if len(url) > 75:
         add("URL-LEN", f"Unusually long URL ({len(url)} chars)", 8)
-    if sub_count >= 3:
+    if sub_count >= 4:
+        add("URL-SUB", f"{sub_count} subdomain levels - deeply nested to obscure destination host", 16)
+    elif sub_count >= 3:
         add("URL-SUB", f"{sub_count} subdomain levels - used to bury the real domain", 10)
     if host.count("-") >= 3:
         add("URL-HYPH", "Many hyphens in host name", 8)
@@ -128,8 +174,18 @@ def analyze_url(url):
         add("URL-HTTP", "Not using HTTPS", 8)
     if sum(c.isdigit() for c in host) / max(len(host), 1) > 0.3 and "URL-IP" not in [s["code"] for s in signals]:
         add("URL-DIGITS", "High share of digits in host name", 6)
-    if len(tokens & URL_KEYWORDS) >= 2:
-        add("URL-KW", "Several credential/security words in URL: " + ", ".join(sorted(tokens & URL_KEYWORDS)), 8)
+    
+    # Sensitive credential / security keywords
+    kw_hits = tokens & URL_KEYWORDS
+    if len(kw_hits) >= 2:
+        add("URL-KW", "Several credential/security words in URL: " + ", ".join(sorted(kw_hits)), 10)
+    elif len(kw_hits) == 1 and not is_official(reg):
+        add("URL-KW1", f"Sensitive credential/security keyword in URL: '{next(iter(kw_hits))}'", 6)
+    
+    # Subdomain padding combined with credential keywords
+    if sub_count >= 3 and kw_hits:
+        add("URL-SUB-KW", f"Subdomains contain authentication/security terms ({', '.join(sorted(kw_hits))})", 12)
+
     if "%" in p.path and re.search(r"%[0-9a-f]{2}", p.path, re.I):
         add("URL-ENC", "Percent-encoded characters in path", 5)
 
@@ -140,7 +196,7 @@ def analyze_url(url):
         off_flag = True
     if not off_flag and not is_official(reg):
         for e in ENTITIES:
-            hit = [a for a in e["aliases"] if " " not in a and a in tokens]
+            hit = [a for a in e["aliases"] if " " not in a and (a in tokens or _normalise_label(a) in norm_tokens)]
             if hit:
                 add("URL-BRAND", f"Mentions '{hit[0]}' ({e['name']}) but registered domain is '{reg}', not official", 25)
                 break
